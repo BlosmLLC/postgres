@@ -179,6 +179,8 @@ s{PG_VERSION_STR "[^"]+"}{__STRINGIFY(x) #x\n#define __STRINGIFY2(z) __STRINGIFY
 		print O "#define USE_OPENSSL 1\n" if ($self->{options}->{openssl});
 		print O "#define ENABLE_NLS 1\n"  if ($self->{options}->{nls});
 
+		print O "#define SKIP_ACCESS_CONTROL 1\n";
+
 		print O "#define BLCKSZ ", 1024 * $self->{options}->{blocksize}, "\n";
 		print O "#define RELSEG_SIZE ",
 		  (1024 / $self->{options}->{blocksize}) *

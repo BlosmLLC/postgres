@@ -2156,7 +2156,7 @@ CopyFromErrorCallback(void *arg)
 			char	   *attval;
 
 			attval = limit_printout_length(cstate->cur_attval);
-			errcontext("COPY %s, line %d, column %s: \"%s\"",
+			errcontext("bbCOPY %s, line %d, column %s: \"%s\"",
 					   cstate->cur_relname, cstate->cur_lineno,
 					   cstate->cur_attname, attval);
 			pfree(attval);
@@ -2192,7 +2192,7 @@ CopyFromErrorCallback(void *arg)
 			}
 			else
 			{
-				errcontext("COPY %s, line %d",
+				errcontext("aCOPY %s, line %d",
 						   cstate->cur_relname, cstate->cur_lineno);
 			}
 		}
@@ -3015,13 +3015,20 @@ NextCopyFrom(CopyState cstate, ExprContext *econtext,
 		if (!NextCopyFromRawFields(cstate, &field_strings, &fldct))
 			return false;
 
-		/* check for overflowing fields */
-		if (nfields > 0 && fldct > nfields)
-			ereport(ERROR,
-					(errcode(ERRCODE_BAD_COPY_FILE_FORMAT),
-					 errmsg("extra data after last expected column")));
+		if (nfields >= fldct){
+			int i;
+			cstate->raw_fields = repalloc(cstate->raw_fields,
+										  nfields * sizeof(char *));
+			for(i=fldct; i < nfields; i++){
+				cstate->raw_fields[i] = (char *) 0;
+			}
+			fldct = nfields;
+		}
 
-		fieldno = 0;
+		/* check for overflowing fields */
+		if (nfields > 0 && fldct > nfields){
+			fieldno = 0;
+		}
 
 		/* Read the OID field if present */
 		if (file_has_oids)

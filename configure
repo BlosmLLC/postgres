@@ -716,6 +716,7 @@ krb_srvtab
 with_python
 with_perl
 with_tcl
+enable_no_access_control
 enable_thread_safety
 INCLUDES
 autodepend
@@ -819,6 +820,7 @@ with_wal_segsize
 with_CC
 enable_depend
 enable_cassert
+enable_no_access_control
 enable_thread_safety
 with_tcl
 with_tclconfig
@@ -1486,6 +1488,7 @@ Optional Features:
   --enable-tap-tests      enable TAP tests (requires Perl and IPC::Run)
   --enable-depend         turn on automatic dependency tracking
   --enable-cassert        enable assertion checks (for debugging)
+  --enable-no-access-control   skip checking access to the folders
   --disable-thread-safety disable thread-safety in client libraries
   --disable-largefile     omit support for large files
   --disable-float4-byval  disable float4 passed by value
@@ -5264,6 +5267,31 @@ else
   enable_cassert=no
 
 fi
+
+
+
+# Check whether --no-access-control was given.
+if test "${enable_no_access_control+set}" = set; then :
+  enableval=$enable_no_access_control;
+  case $enableval in
+    yes)
+
+$as_echo "#define SKIP_ACCESS_CONTROL 1" >>confdefs.h
+
+      ;;
+    no)
+      :
+      ;;
+    *)
+      as_fn_error $? "no argument expected for --enable-no-access-coontrol option" "$LINENO" 5
+      ;;
+  esac
+
+else
+  enable_no_access_control=no
+
+fi
+
 
 
 
@@ -17320,4 +17348,3 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
-

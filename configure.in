@@ -560,8 +560,16 @@ AC_SUBST(autodepend)
 # Enable assert checks
 #
 PGAC_ARG_BOOL(enable, cassert, no, [enable assertion checks (for debugging)],
-              [AC_DEFINE([USE_ASSERT_CHECKING], 1,
+              [AC_DEFINE([USE_ASSERT_BCHECKING], 1,
                          [Define to 1 to build with assertion checks. (--enable-cassert)])])
+
+
+#
+# Enable assert checks
+#
+PGAC_ARG_BOOL(enable, no-access-control, yes, [enable skipping permissions check for directories],
+              [AC_DEFINE([SKIP_ACCESS_CONTROL], 1,
+                         [Define to 1 to build skipping permissions checl. (--enable-no-access-control)])])
 
 
 #

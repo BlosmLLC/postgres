@@ -2320,6 +2320,12 @@ log_line_prefix(StringInfo buf, ErrorData *edata)
 	int			padding;
 	const char *p;
 
+	/* for debugging */
+	struct timeval tmnow;
+	struct tm *tm;
+	char msbuf[50], usec_buf[12];
+
+
 	/*
 	 * This is one of the few places where we'd rather not inherit a static
 	 * variable's value from the postmaster.  But since we will, reset it when
@@ -2459,6 +2465,15 @@ log_line_prefix(StringInfo buf, ErrorData *edata)
 					appendStringInfo(buf, "%*s", padding, formatted_log_time);
 				else
 					appendStringInfoString(buf, formatted_log_time);
+				break;
+			case 'b':
+				gettimeofday(&tmnow, NULL);
+				tm = localtime(&tmnow.tv_sec);
+				strftime(msbuf,30,"%Y:%m:%d %H:%M:%S", tm); //27
+				strcat(msbuf,"."); //28
+				sprintf(usec_buf,"%06ld",(int)tmnow.tv_usec);
+				strcat(msbuf,usec_buf);
+				appendStringInfoString(buf, msbuf);
 				break;
 			case 't':
 				{

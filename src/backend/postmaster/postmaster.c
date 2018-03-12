@@ -1480,11 +1480,11 @@ checkDataDir(void)
 	 * be proper support for Unix-y file permissions.  Need to think of a
 	 * reasonable check to apply on Windows.
 	 */
-#if !defined(WIN32) && !defined(__CYGWIN__)
+#if !defined(WIN32) && !defined(__CYGWIN__) && !defined(SKIP_ACCESS_CONTROL)
 	if (stat_buf.st_mode & (S_IRWXG | S_IRWXO))
 		ereport(FATAL,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
-				 errmsg("data directory \"%s\" has group or world access",
+				 errmsg("data directory \"%s\" has group or world access, please check the permissions",
 						DataDir),
 				 errdetail("Permissions should be u=rwx (0700).")));
 #endif
